@@ -8,6 +8,9 @@ import com.lundberg.wigelltravels.repository.AddressRepository;
 import com.lundberg.wigelltravels.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class AddressService {
 
@@ -19,6 +22,7 @@ public class AddressService {
         this.customerRepository = customerRepository;
     }
 
+    private static final Logger logger = LoggerFactory.getLogger(AddressService.class);
 
     public AddressDto createAddress(Long customerId, AddressDto dto) {
         Customer customer = customerRepository.findById(customerId)
@@ -28,7 +32,7 @@ public class AddressService {
         address.setCity(dto.city());
         address.setCustomer(customer);
         Address saved = addressRepository.save(address);
-        System.out.println("Created address for customer " + customerId);
+        logger.info("Created address for customer {}", customerId);
         return new AddressDto(
                 saved.getId(),
                 saved.getStreet(),
@@ -38,12 +42,12 @@ public class AddressService {
 
     public void deleteAddress(Long customerId, Long addressId){
         Address address = addressRepository.findById(addressId)
-                .orElseThrow(() -> new IllegalArgumentException("Address not found"));
+                .orElseThrow(() -> new RuntimeException("Address not found"));
         if (!address.getCustomer().getId().equals(customerId)){
             throw new IllegalArgumentException("Address does not belong to this customer");
         }
 
         addressRepository.delete(address);
-        System.out.println("Delete address " + address);
+        logger.info("Deleted address with id {} for customer {}", addressId, customerId);
     }
 }

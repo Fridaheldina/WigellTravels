@@ -1,0 +1,11 @@
+package com.lundberg.wigelltravels.dto;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+public record DestinationCreateDto(
+        @NotBlank String city,
+        @NotBlank String country,
+        @NotBlank String hotelName,
+        @NotNull Double pricePerWeek
+) {}

@@ -1,5 +1,6 @@
 package com.lundberg.wigelltravels.controller;
 
+import com.lundberg.wigelltravels.dto.DestinationCreateDto;
 import com.lundberg.wigelltravels.dto.DestinationDto;
 import com.lundberg.wigelltravels.service.DestinationService;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class DestinationController {
 
     @PostMapping
     public ResponseEntity<DestinationDto> createDestination(
-            @RequestBody DestinationDto dto) {
+            @RequestBody DestinationCreateDto dto) {
 
         return ResponseEntity.status(201)
                 .body(destinationService.createDestination(dto));

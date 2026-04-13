@@ -21,10 +21,17 @@ public class DataInitializer {
             if (customerRepo.count() == 0) {
                 Customer admin = new Customer();
                 admin.setName("Admin");
-                admin.setUsername("admin");
+                admin.setUsername("a");
                 admin.setPassword(encoder.encode("1234"));
                 admin.setRole("ROLE_ADMIN");
                 customerRepo.save(admin);
+
+                Customer user = new Customer();
+                user.setName("User");
+                user.setUsername("u");
+                user.setPassword(encoder.encode("1234"));
+                user.setRole("ROLE_USER");
+                customerRepo.save(user);
 
                 Customer c1 = new Customer();
                 c1.setName("Frida Lundberg");

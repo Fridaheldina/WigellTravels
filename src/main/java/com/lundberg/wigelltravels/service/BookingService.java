@@ -14,6 +14,8 @@ import com.lundberg.wigelltravels.repository.CustomerRepository;
 import com.lundberg.wigelltravels.repository.DestinationRepository;
 import org.springframework.stereotype.Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -29,6 +31,8 @@ public class BookingService {
         this.customerRepository = customerRepository;
         this.destinationRepository = destinationRepository;
     }
+
+    private static final Logger logger = LoggerFactory.getLogger(BookingService.class);
 
     public BookingResponseDto createBooking(BookingCreateDto dto){
         Customer customer = customerRepository.findById(dto.customerId())
@@ -49,7 +53,7 @@ public class BookingService {
         booking.setTotalPricePln(totalPricePln);
 
         Booking savedBooking = bookingRepository.save(booking);
-        System.out.println("Create booking with id " + savedBooking.getId());
+        logger.info("Created booking with id {}", savedBooking.getId());
 
         return new BookingResponseDto(
                 savedBooking.getId(),
@@ -80,7 +84,7 @@ public class BookingService {
         booking.setTotalPricePln(totalPricePln);
 
         bookingRepository.save(booking);
-        System.out.println("uppdate booking " + bookingId);
+        logger.info("Updated booking with id {}", bookingId);
     }
 
     public List<BookingResponseDto> getBookingsByCustomer(Long customerId) {

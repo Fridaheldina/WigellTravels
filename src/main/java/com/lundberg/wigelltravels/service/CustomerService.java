@@ -8,6 +8,9 @@ import com.lundberg.wigelltravels.repository.CustomerRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 @Service
@@ -21,6 +24,8 @@ public class CustomerService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    private static final Logger logger = LoggerFactory.getLogger(CustomerService.class);
+
     public CustomerResponseDto createCustomer(CustomerCreateDto dto){
         Customer customer = new Customer();
         customer.setName(dto.name());
@@ -29,7 +34,7 @@ public class CustomerService {
         customer.setPassword(passwordEncoder.encode(dto.password()));
         customer.setRole("ROLE_USER");
         Customer saved = customerRepository.save(customer);
-        System.out.println("Create customer " + saved.getId());
+        logger.info("Created customer with id {}", saved.getId());
 
         return new CustomerResponseDto(
                 saved.getId(),
@@ -56,7 +61,7 @@ public class CustomerService {
         customer.setUsername(dto.username());
         customer.setPassword(passwordEncoder.encode(dto.password()));
         Customer updated = customerRepository.save(customer);
-        System.out.println("Updated customer " + customerId);
+        logger.info("Updated customer with id {}", customerId);
         return new CustomerResponseDto(
                 updated.getId(),
                 updated.getName(),
@@ -68,6 +73,6 @@ public class CustomerService {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
         customerRepository.delete(customer);
-        System.out.println("Deleted customer " + customerId);
+        logger.info("Deleted customer with id {}", customerId);
     }
 }

@@ -1,10 +1,14 @@
 package com.lundberg.wigelltravels.service;
 
+import com.lundberg.wigelltravels.dto.DestinationCreateDto;
 import com.lundberg.wigelltravels.dto.DestinationDto;
 import com.lundberg.wigelltravels.entity.Destination;
 import com.lundberg.wigelltravels.exception.DestinationNotFoundExcepption;
 import com.lundberg.wigelltravels.repository.DestinationRepository;
 import org.springframework.stereotype.Service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -17,7 +21,9 @@ public class DestinationService {
         this.destinationRepository = destinationRepository;
     }
 
-    public DestinationDto createDestination(DestinationDto dto){
+    private static final Logger logger = LoggerFactory.getLogger(DestinationService.class);
+
+    public DestinationDto createDestination(DestinationCreateDto dto){
         Destination destination = new Destination();
         destination.setCity(dto.city());
         destination.setCountry(dto.country());
@@ -25,7 +31,7 @@ public class DestinationService {
         destination.setPricePerWeek(dto.pricePerWeek());
 
         Destination saved = destinationRepository.save(destination);
-        System.out.println("Create destination " + saved.getId());
+        logger.info("Created destination with id {}", saved.getId());
 
         return new DestinationDto(
                 saved.getId(),
@@ -60,6 +66,7 @@ public class DestinationService {
         destination.setHotelName(dto.hotelName());
         destination.setPricePerWeek(dto.pricePerWeek());
         Destination updated = destinationRepository.save(destination);
+        logger.info("Updated destination with id {}", id);
 
         return new DestinationDto(
                 updated.getId(),
@@ -77,6 +84,6 @@ public class DestinationService {
                 .orElseThrow(() -> new DestinationNotFoundExcepption("Destination not found"));
 
         destinationRepository.delete(destination);
-        System.out.println("Deleted destination " + id);
+        logger.info("Deleted destination with id {}", id);
     }
 }
